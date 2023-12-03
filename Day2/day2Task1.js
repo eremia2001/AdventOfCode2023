@@ -1,13 +1,59 @@
 const fs = require('fs');
 
+let gameList ;
 fs.readFile('./data.txt', 'utf8', (err, data) => {
     if (err) {
         console.error(err);
         return;
     }
     
-    processFileContent(data);
+    const maxRed = 12 ; 
+const maxGreen = 13 ; 
+const maxBlue = 14 ;
+    gameList = processFileContent(data);
+    
+
+    const toDeleteGames = gameList.filter((game) => {
+       return  game.moves.some((move) => {
+             if(move.blue > maxBlue)
+             {
+                return true
+             }
+             if(move.red > maxRed)
+             {
+                return true
+             }
+             if(move.green > maxGreen)
+             {
+                return true
+             }
+        })
+
+        
+
+    
+})
+
+const result = gameList.filter((game) => {
+    return !toDeleteGames.find((toDelete) => game.gameId == toDelete.gameId )
+})
+//console.log(sumId(result))
+
+
+     
 });
+
+function sumId(data)
+{
+    let sum = 0 ; 
+    data.map(game => sum += parseInt(game.gameId))
+    return sum
+}
+
+ 
+
+
+
 
 
 
@@ -30,5 +76,9 @@ function processFileContent(data) {
         });
         return { gameId, moves };
     }).filter(game => game !== null);
-    console.log(games)
+    return games;
 }
+module.exports = { processFileContent };
+
+
+
